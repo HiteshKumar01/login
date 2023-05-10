@@ -22,3 +22,4 @@ import javafx.stage.Stage;
             launch(args);
         }
     }
+    //TODO adjust the UI
