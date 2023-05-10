@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="610.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.login.controller.LoginController">
+<AnchorPane fx:id="anchorpane" prefHeight="610.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.login.controller.LoginController" stylesheets="/css/style.css">
    <children>
       <Label disable="true" layoutX="244.0" layoutY="6.0" prefHeight="82.0" prefWidth="223.0" text="LOGIN FORM" textAlignment="JUSTIFY" underline="true">
          <font>
