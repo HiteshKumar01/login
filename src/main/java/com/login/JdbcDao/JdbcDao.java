@@ -6,6 +6,7 @@ import java.sql.*;
 public class JdbcDao {
 
     private static final String DATABASE_URL="jdbc:mysql://localhost:3306/login_register?useSSL=false";
+    //allowPublicKeyRetrieval=true&
     private static final String DATABASE_USER="root";
     private static final String DATABASE_PASS="root";
 
