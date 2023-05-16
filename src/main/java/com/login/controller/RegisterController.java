@@ -6,16 +6,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.scene.control.*;
 
 import java.io.IOException;
 
 
-
 public class RegisterController {
 
+    @FXML
+    public static Label warning;
     @FXML
     private TextArea nameField;
     @FXML
@@ -28,11 +29,12 @@ public class RegisterController {
     private Button registerButtonMain;
     @FXML
     private Button goToLoginPage;
-
+    @FXML
+    private TextArea textArea;
 
 
     @FXML
-    public void register(ActionEvent event) throws  IOException {
+    public void register(ActionEvent event) throws IOException {
 
 
         Window owner = registerButtonMain.getScene().getWindow();
@@ -60,8 +62,8 @@ public class RegisterController {
             System.out.println("enter all the fields......");
             return;
         }
-        if(confirmPasswordField.getText().isEmpty()){
-            showAlert(Alert.AlertType.ERROR,owner,"Form Error!",
+        if (confirmPasswordField.getText().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, owner, "Form Error!",
                     "Please re-enter the password");
             System.out.println("enter all the fields......");
             return;
@@ -70,18 +72,36 @@ public class RegisterController {
         String name = nameField.getText();
         String emailId = emailField.getText();
         String password = passwordField.getText();
-        String confirmPassword=confirmPasswordField.getText();
+        String confirmPassword = confirmPasswordField.getText();
 
         JdbcDao jdbcDao = new JdbcDao();
-        jdbcDao.insertRecord(name, emailId, password,confirmPassword);
+        Boolean flag;
+        try {
+            flag = jdbcDao.insertRecord(name, emailId, password, confirmPassword);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-        showAlert(Alert.AlertType.CONFIRMATION, owner, "Registration Successful!",
-                "Welcome " + name);
 
-        //TODO create a method and call it here so that when the user successfully registers itself, the flow goes to Login page
-        toMainPageAfterLogin();
+        if (flag) {
+            showAlert(Alert.AlertType.CONFIRMATION, owner, "Registration Successful!",
+                    "Welcome " + name);
+            toMainPageAfterLogin();
+
+        } else {
+            showAlert(Alert.AlertType.WARNING, owner, "Registration Failed!",
+                    "email id already registered " + "'" + name +  "'");
+            clearAllFields();
+        }
     }
-//TODO the above function
+
+    public void clearAllFields(){
+        nameField.setText("");
+        emailField.setText("");
+        passwordField.setText("");
+        confirmPasswordField.setText("");
+    }
+
     public void toMainPageAfterLogin() throws IOException {
         Stage stage= (Stage) registerButtonMain.getScene().getWindow();
         stage.close();
@@ -94,12 +114,13 @@ public class RegisterController {
 
     }
 
-    private static void showAlert(Alert.AlertType alertType, Window owner, String title, String message) {
+    public static void showAlert(Alert.AlertType alertType, Window owner, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.initOwner(owner);
+
 
         alert.showAndWait();
     }

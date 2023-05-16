@@ -1,9 +1,12 @@
 package com.login.JdbcDao;
 
+import javafx.stage.Window;
+
 import java.io.IOException;
 import java.sql.*;
 
 public class JdbcDao {
+
 
     private static final String DATABASE_URL="jdbc:mysql://localhost:3306/login_register?useSSL=false";
     //allowPublicKeyRetrieval=true&
@@ -16,10 +19,11 @@ public class JdbcDao {
 
     //query for validation during login
     private static final String SELECT_QUERY="SELECT * FROM login_reg WHERE email = ? and password = SHA1(?)";
+    private Window owner;
 
 
     //method used during registration
-    public void insertRecord(String name,String email,String password,String confirm_password) throws IOException{
+    public Boolean insertRecord(String name, String email, String password, String confirm_password) throws Exception{
 
         //establish a connection
         try (Connection connection = DriverManager
@@ -34,10 +38,10 @@ public class JdbcDao {
             System.out.println(preparedStatement);
             //executing the query
             preparedStatement.executeUpdate();
-        }catch (SQLException e){
+        }catch (SQLIntegrityConstraintViolationException e){
             printSQLException(e);
-
         }
+        return false;
     }
 
     //method used for validation during login
@@ -76,5 +80,14 @@ public class JdbcDao {
             }
         }
     }
+//    public static void showAlert(Alert.AlertType alertType, Window owner, String title, String message) {
+//        Alert alert = new Alert(alertType);
+//        alert.setTitle(title);
+//        alert.setHeaderText(null);
+//        alert.setContentText(message);
+//        alert.initOwner(owner);
+//
+//        alert.showAndWait();
+//    }
 
 }
